@@ -1,0 +1,224 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "beego Test API",
+        "description": "beego has a very cool tools to autogenerate documents for your API",
+        "version": "1.0.0",
+        "termsOfService": "http://beego.me/",
+        "contact": {
+            "email": "astaxie@gmail.com"
+        },
+        "license": {
+            "name": "Url http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/wanbu_data_upload_api/": {
+            "get": {
+                "tags": [
+                    "wanbu_data_upload_api"
+                ],
+                "description": "get WanbuDataUploadRecord",
+                "operationId": "WanbuDataUploadRecordController.Get All",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "Filter. e.g. col1:v1,col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "Fields returned. e.g. col1,col2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sortby",
+                        "description": "Sorted-by fields. e.g. col1,col2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "Limit the size of result set. Must be an integer",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "Start position of result set. Must be an integer",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/WanbuDataUploadRecord"
+                        }
+                    },
+                    "403": {}
+                }
+            },
+            "post": {
+                "tags": [
+                    "wanbu_data_upload_api"
+                ],
+                "description": "create WanbuDataUploadRecord",
+                "operationId": "WanbuDataUploadRecordController.Post",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "body for WanbuDataUploadRecord content",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WanbuDataUploadRecord"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "{int} models.WanbuDataUploadRecord"
+                    },
+                    "403": {
+                        "description": "body is empty"
+                    }
+                }
+            }
+        },
+        "/wanbu_data_upload_api/{id}": {
+            "get": {
+                "tags": [
+                    "wanbu_data_upload_api"
+                ],
+                "description": "get WanbuDataUploadRecord by id",
+                "operationId": "WanbuDataUploadRecordController.Get One",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The key for staticblock",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/WanbuDataUploadRecord"
+                        }
+                    },
+                    "403": {
+                        "description": ":id is empty"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "wanbu_data_upload_api"
+                ],
+                "description": "update the WanbuDataUploadRecord",
+                "operationId": "WanbuDataUploadRecordController.Put",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id you want to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "body for WanbuDataUploadRecord content",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WanbuDataUploadRecord"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/WanbuDataUploadRecord"
+                        }
+                    },
+                    "403": {
+                        "description": ":id is not int"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "wanbu_data_upload_api"
+                ],
+                "description": "delete the WanbuDataUploadRecord",
+                "operationId": "WanbuDataUploadRecordController.Delete",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id you want to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string} delete success!"
+                    },
+                    "403": {
+                        "description": "id is empty"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "WanbuDataUploadRecord": {
+            "title": "WanbuDataUploadRecord",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Timestamp": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Uploadtime": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Userid": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "Walkdays": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Walksteps": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "wanbu_data_upload_api",
+            "description": "WanbuDataUploadRecordController oprations for WanbuDataUploadRecord\n"
+        }
+    ]
+}
