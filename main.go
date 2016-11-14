@@ -25,7 +25,7 @@ func convertTimeToString(t int64) string {
 
 func init() {
 
-	orm.RegisterDataBase("default", "mysql", "heyu:wanbu12#$@tcp(101.201.141.236:3306)/wanbu")
+	orm.RegisterDataBase("default", "mysql", "xxxx:wanbu12#$@tcp(xxx.xxx.141.236:3306)/wanbu")
 }
 
 var consumer *nsq.Consumer
