@@ -126,24 +126,24 @@ definitions:
     title: WanbuDataUploadRecord
     type: object
     properties:
+      Dateline:
+        type: integer
+        format: int64
+      Daynum:
+        type: integer
+        format: int32
+      Devtype:
+        type: integer
+        format: int32
       Id:
         type: integer
         format: int64
-      Timestamp:
-        type: integer
-        format: int64
-      Uploadtime:
-        type: integer
-        format: int64
-      Userid:
-        type: integer
-        format: int64
-      Walkdays:
+      Stepnum:
         type: integer
         format: int32
-      Walksteps:
+      Touserid:
         type: integer
-        format: int32
+        format: int64
 tags:
 - name: wanbu_data_upload_api
   description: |

@@ -2,8 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 	client "wanbu_data_upload_api/client"
+
+	config "github.com/msbranco/goconfig"
+
 	. "wanbu_data_upload_api/logs"
 	_ "wanbu_data_upload_api/routers"
 
@@ -25,16 +29,35 @@ func convertTimeToString(t int64) string {
 
 func init() {
 
-	orm.RegisterDataBase("default", "mysql", "xxxx:wanbu12#$@tcp(xxx.xxx.141.236:3306)/wanbu")
+	cf, _ := config.ReadConfigFile("../etc/config.ini")
+	rdip1, _ := cf.GetString("DBCONN1", "IP")
+	rdusr1, _ := cf.GetString("DBCONN1", "USERID")
+	rdpwd1, _ := cf.GetString("DBCONN1", "USERPWD")
+	rdname1, _ := cf.GetString("DBCONN1", "DBNAME")
+	dbadress := rdusr1 + ":" + rdpwd1 + "@tcp(" + rdip1 + ")/" + rdname1
+	orm.RegisterDataBase("default", "mysql", dbadress)
+
+	nsqip, _ := cf.GetString("NSQ", "IP")
+	nsqport, _ := cf.GetString("NSQ", "PORT")
+	nsqadress = nsqip + ":" + nsqport
 }
 
 var consumer *nsq.Consumer
-var nsqadress = "192.168.20.249:4161"
+var nsqadress = "192.168.20.248:4161"
+var version = "1.0.0PR1"
 
 func main() {
 
+	args := os.Args
+
+	if len(args) == 2 && (args[1] == "-v") {
+
+		fmt.Println("看好了兄弟，现在的版本是【", version, "】，可别弄错了")
+		os.Exit(0)
+	}
+
 	//对接NSQ，消费上传消息
-	consumer, err := client.NewConsummer("base_data_upload", "walkdatet1")
+	consumer, err := client.NewConsummer("base_data_upload", "wanbudatauplaodapi")
 	if err != nil {
 		panic(err)
 	}
@@ -48,25 +71,28 @@ func main() {
 		}
 	}(consumer)
 
+	//正常流程
+	go func() {
+		for {
+			select {
+
+			case m := <-client.User_walk_data_chan:
+				if v, err := client.AddWanbuDataUploadRecord(&m); err != nil {
+					Logger.Critical(errors.New(fmt.Sprintf("AddWanbuDataUploadRecord error happens[%s]", err.Error())))
+				} else {
+					Logger.Infof("Userid:[%d]上传了[%d]天的数据，总步数为[%d]，上传时间为[%s]", v.Touserid, v.Daynum, v.Stepnum, convertTimeToString(v.Dateline))
+				}
+
+			default:
+				time.Sleep(1 * time.Millisecond)
+			}
+		}
+	}()
+
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
 	beego.Run()
 
-	//正常流程
-	for {
-		select {
-
-		case m := <-client.User_walk_data_chan:
-			if v, err := client.AddWanbuDataUploadRecord(&m); err != nil {
-				Logger.Critical(errors.New(fmt.Sprintf("AddWanbuDataUploadRecord error happens[%s]", err.Error())))
-			} else {
-				Logger.Infof("Userid:[%d]上传了[%d]天的数据，总步数为[%d]，上传时间为[%s]", v.Userid, v.Walkdays, v.Walksteps, convertTimeToString(v.Uploadtime))
-			}
-
-		default:
-			time.Sleep(1 * time.Millisecond)
-		}
-	}
 }

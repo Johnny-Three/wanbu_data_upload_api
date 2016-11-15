@@ -40,6 +40,7 @@ func Decode(msg string) error {
 
 	userid := js.Get("userid").MustInt()
 	wd.Timestamp = js.Get("timestamp").MustInt64()
+	devtype := js.Get("devinfo").Get("reqtype").MustInt()
 	arr, _ := js.Get("walkdays").Array()
 
 	for index := range arr {
@@ -82,6 +83,7 @@ func Decode(msg string) error {
 
 	userwalkdata.Uid = userid
 	userwalkdata.Timestamp = wd.Timestamp
+	userwalkdata.Devtype = devtype
 	userwalkdata.Walkdays = walkdays
 
 	User_walk_data_chan <- userwalkdata
