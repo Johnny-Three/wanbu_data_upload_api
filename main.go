@@ -40,11 +40,14 @@ func init() {
 	nsqip, _ := cf.GetString("NSQ", "IP")
 	nsqport, _ := cf.GetString("NSQ", "PORT")
 	nsqadress = nsqip + ":" + nsqport
+
+	level, _ := cf.GetInt64("LOGLVL", "LVL")
+	beego.SetLevel(int(level))
 }
 
 var consumer *nsq.Consumer
 var nsqadress = "192.168.20.248:4161"
-var version = "1.0.0PR1"
+var version = "1.0.0PR2"
 
 func main() {
 

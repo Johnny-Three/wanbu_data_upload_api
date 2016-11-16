@@ -30,7 +30,6 @@ func (h *Handle) Process() {
 	for {
 		select {
 		case m := <-h.msgchan:
-			//fmt.Println(string(m.Body))
 			err := Decode(string(m.Body))
 			if err != nil {
 				Logger.Critical(err)

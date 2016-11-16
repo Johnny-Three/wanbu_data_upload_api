@@ -3,6 +3,7 @@ package client
 import (
 	"wanbu_data_upload_api/models"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -24,5 +25,8 @@ func AddWanbuDataUploadRecord(m *User_walkdays_struct) (x *models.WanbuDataUploa
 	}
 	o := orm.NewOrm()
 	_, err = o.Insert(x)
+
+	beego.Trace("userid", x.Touserid, "insert ok")
+
 	return x, err
 }
