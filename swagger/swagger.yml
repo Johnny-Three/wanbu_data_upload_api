@@ -65,23 +65,6 @@ paths:
         "403":
           description: body is empty
   /wanbu_data_upload_api/{id}:
-    get:
-      tags:
-      - wanbu_data_upload_api
-      description: get WanbuDataUploadRecord by id
-      operationId: WanbuDataUploadRecordController.Get One
-      parameters:
-      - in: path
-        name: id
-        description: The key for staticblock
-        required: true
-        type: string
-      responses:
-        "200":
-          schema:
-            $ref: '#/definitions/WanbuDataUploadRecord'
-        "403":
-          description: :id is empty
     put:
       tags:
       - wanbu_data_upload_api
@@ -121,6 +104,22 @@ paths:
           description: '{string} delete success!'
         "403":
           description: id is empty
+  /wanbu_data_upload_api/count:
+    get:
+      tags:
+      - wanbu_data_upload_api
+      description: get WanbuDataUploadRecord by id
+      operationId: WanbuDataUploadRecordController.Get One
+      parameters:
+      - in: query
+        name: query
+        description: Filter. e.g. col1:v1,col2:v2 ...
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/definitions/WanbuDataUploadRecord'
+        "403": {}
 definitions:
   WanbuDataUploadRecord:
     title: WanbuDataUploadRecord

@@ -16,7 +16,7 @@ func init() {
 	beego.GlobalControllerRouter["wanbu_data_upload_api/controllers:WanbuDataUploadRecordController"] = append(beego.GlobalControllerRouter["wanbu_data_upload_api/controllers:WanbuDataUploadRecordController"],
 		beego.ControllerComments{
 			Method: "GetOne",
-			Router: `/:id`,
+			Router: `/count`,
 			AllowHTTPMethods: []string{"get"},
 			Params: nil})
 

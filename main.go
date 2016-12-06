@@ -47,7 +47,7 @@ func init() {
 
 var consumer *nsq.Consumer
 var nsqadress = "192.168.20.248:4161"
-var version = "1.0.0PR2"
+var version = "1.0.0PR3"
 
 func main() {
 

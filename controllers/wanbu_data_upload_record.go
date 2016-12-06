@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"time"
 	"wanbu_data_upload_api/models"
 
 	"github.com/astaxie/beego"
@@ -49,14 +50,63 @@ func (c *WanbuDataUploadRecordController) Post() {
 // GetOne ...
 // @Title Get One
 // @Description get WanbuDataUploadRecord by id
-// @Param	id		path 	string	true		"The key for staticblock"
+// @Param	query	query	string	false	"Filter. e.g. col1:v1,col2:v2 ..."
 // @Success 200 {object} models.WanbuDataUploadRecord
-// @Failure 403 :id is empty
-// @router /:id [get]
+// @Failure 403
+// @router /count [get]
 func (c *WanbuDataUploadRecordController) GetOne() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetWanbuDataUploadRecordById(id)
+
+	var userid int
+	var min, max int64
+
+	var query = make(map[string]string)
+	// query: k:v,k:v
+	if v := c.GetString("query"); v != "" {
+		for _, cond := range strings.Split(v, ",") {
+			kv := strings.SplitN(cond, ":", 2)
+			if len(kv) != 2 {
+				c.Data["json"] = errors.New("Error: invalid query key/value pair")
+				c.ServeJSON()
+				return
+			}
+			k, v := kv[0], kv[1]
+			query[k] = v
+		}
+	}
+
+	for k, v := range query {
+
+		if k == "dateline" {
+
+			//如果查找到dateline这个特殊query，查某个时间段的时间，必须符合格式，否则返回格式错误
+			ts := strings.Split(v, "-")
+			if len(ts) != 2 {
+				c.Data["json"] = errors.New("query dateline 格式错误")
+			}
+			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
+			t1, err := time.Parse("20060102", ts[0])
+			if err != nil {
+				c.Data["json"] = err.Error()
+				c.ServeJSON()
+				break
+			}
+			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
+			t2, err := time.Parse("20060102", ts[1])
+			if err != nil {
+				c.Data["json"] = err.Error()
+				c.ServeJSON()
+				break
+			}
+
+			min = t1.Unix()
+			max = t2.Unix()
+		}
+		if k == "touserid" {
+			userid, _ = strconv.Atoi(v)
+		}
+	}
+
+	v, err := models.GetWanbuDataUploadRecordById(userid, min, max)
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {

@@ -37,13 +37,20 @@ func AddWanbuDataUploadRecord(m *WanbuDataUploadRecord) (id int64, err error) {
 
 // GetWanbuDataUploadRecordById retrieves WanbuDataUploadRecord by Id. Returns error if
 // Id doesn't exist
-func GetWanbuDataUploadRecordById(id int) (v *WanbuDataUploadRecord, err error) {
+func GetWanbuDataUploadRecordById(id int, min, max int64) (v int, err error) {
+
+	//var rs orm.RawSeter
 	o := orm.NewOrm()
-	v = &WanbuDataUploadRecord{Id: id}
-	if err = o.Read(v); err == nil {
-		return v, nil
+	var totalItem int = 0
+	var qs string
+	if min == 0 && max == 0 {
+		qs = fmt.Sprintf("SELECT count(*) FROM wanbu_pm_personalupload where touserid=%d", id)
+	} else {
+		qs = fmt.Sprintf("SELECT count(*) FROM wanbu_pm_personalupload where touserid=%d and dateline>=%d and dateline <=%d", id, min, max)
 	}
-	return nil, err
+	//总条数,总页数
+	o.Raw(qs).QueryRow(&totalItem) //获取总条数
+	return totalItem, nil
 }
 
 // GetAllWanbuDataUploadRecord retrieves all WanbuDataUploadRecord matches certain condition. Returns empty list if
