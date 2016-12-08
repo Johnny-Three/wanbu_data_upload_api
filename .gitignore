@@ -1,0 +1,7 @@
+*.tmp
+swagger/
+debug
+wanbu_data_upload_api
+tests/
+
+

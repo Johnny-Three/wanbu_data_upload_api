@@ -46,7 +46,8 @@ func GetWanbuDataUploadRecordById(id int, min, max int64) (v int, err error) {
 	if min == 0 && max == 0 {
 		qs = fmt.Sprintf("SELECT count(*) FROM wanbu_pm_personalupload where touserid=%d", id)
 	} else {
-		qs = fmt.Sprintf("SELECT count(*) FROM wanbu_pm_personalupload where touserid=%d and dateline>=%d and dateline <=%d", id, min, max)
+		qs = fmt.Sprintf("SELECT count(*) FROM wanbu_pm_personalupload where touserid=%d and dateline>=%d and dateline <%d", id, min, max)
+		fmt.Println("querystring ", qs)
 	}
 	//总条数,总页数
 	o.Raw(qs).QueryRow(&totalItem) //获取总条数
@@ -70,17 +71,17 @@ func GetAllWanbuDataUploadRecord(query map[string]string, fields []string, sortb
 				return nil, errors.New("query dateline 格式错误")
 			}
 			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
-			t1, err := time.Parse("20060102", ts[0])
+			t1, err := time.ParseInLocation("20060102", ts[0], time.Local)
 			if err != nil {
 				return nil, err
 			}
 			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
-			t2, err := time.Parse("20060102", ts[1])
+			t2, err := time.ParseInLocation("20060102", ts[1], time.Local)
 			if err != nil {
 				return nil, err
 			}
 			qs = qs.Filter("dateline__gte", t1.Unix()) // dateline >= t1
-			qs = qs.Filter("dateline__lte", t2.Unix()) // dateline <= t2
+			qs = qs.Filter("dateline__lt", t2.Unix())  // dateline <= t2
 
 		} else {
 

@@ -84,14 +84,14 @@ func (c *WanbuDataUploadRecordController) GetOne() {
 				c.Data["json"] = errors.New("query dateline 格式错误")
 			}
 			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
-			t1, err := time.Parse("20060102", ts[0])
+			t1, err := time.ParseInLocation("20060102", ts[0], time.Local)
 			if err != nil {
 				c.Data["json"] = err.Error()
 				c.ServeJSON()
 				break
 			}
 			//从字符串转为时间戳，第一个参数是格式，第二个是要转换的时间字符串
-			t2, err := time.Parse("20060102", ts[1])
+			t2, err := time.ParseInLocation("20060102", ts[1], time.Local)
 			if err != nil {
 				c.Data["json"] = err.Error()
 				c.ServeJSON()
